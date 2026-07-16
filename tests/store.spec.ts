@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/HomePage';
 import { SignUpModal } from '../pages/SignUpModal';
+import { LogInModal } from '../pages/LoginModal';
 
 test('Deve abrir a página da Demoblaze', async ({ page }) => {
 
@@ -13,11 +14,14 @@ test('Deve abrir a página da Demoblaze', async ({ page }) => {
 
 });
 
-test('Deve cadastrar um novo usuário com sucesso', async ({ page }) => {
+test('Deve cadastrar um novo usuário com sucesso', async ({ 
+    page, 
+    browserName, 
+}) => {
   const homePage = new HomePage(page);
   const signUpModal = new SignUpModal(page);
 
-  const username = `filipeqa_${Date.now()}`;
+  const username = `filipeqa_${browserName}_${Date.now()}`;
   const password = 'Easy123!';
 
   await homePage.open();
@@ -35,4 +39,45 @@ test('Deve cadastrar um novo usuário com sucesso', async ({ page }) => {
   expect(dialog.message()).toBe('Sign up successful.');
 
   await dialog.accept();
+});
+
+test('Deve logar com usuário já cadastrado com sucesso', async ({ 
+    page, 
+    browserName,
+ }) => {
+  const homePage = new HomePage(page);
+  const signUpModal = new SignUpModal(page);
+  const logInModal = new LogInModal(page);
+
+  const username = `filipeqa_${browserName}_${Date.now()}`;
+  const password = 'Easy123!';
+
+  await homePage.open();
+
+  // Cadastro do usuário
+  await homePage.openSignUpModal();
+  await signUpModal.fillUsername(username);
+  await signUpModal.fillPassword(password);
+
+  const dialogPromise = page.waitForEvent('dialog');
+
+  await signUpModal.clickSignUp();
+
+  const dialog = await dialogPromise;
+
+  expect(dialog.message()).toBe('Sign up successful.');
+
+  await dialog.accept();
+
+  // Login com o usuário cadastrado
+  await homePage.openLogInModal();
+  await logInModal.fillUsername(username);
+  await logInModal.fillPassword(password);
+  await logInModal.clickLogIn();
+
+  //Validação de login
+  await expect(
+    page.getByText(`Welcome ${username}`, { exact: true })
+  ).toBeVisible();
+
 });

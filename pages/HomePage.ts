@@ -15,4 +15,8 @@ export class HomePage {
   async openSignUpModal() {
     await this.page.getByRole('link', { name: 'Sign up' }).click();
   }
+
+  async openLogInModal() {
+    await this.page.getByRole('link', { name: 'Log in' }).click();
+  }
 }
