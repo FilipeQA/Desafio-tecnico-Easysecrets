@@ -19,4 +19,10 @@ export class HomePage {
   async openLogInModal() {
     await this.page.getByRole('link', { name: 'Log in' }).click();
   }
+
+  async openProduct(productName: string) {
+    await this.page
+    .getByRole('link', { name: productName, exact: true }).click();
+  }
+
 }
