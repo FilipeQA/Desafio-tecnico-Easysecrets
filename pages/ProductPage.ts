@@ -9,6 +9,8 @@ export class ProductPage {
 
     async addToCart() {
       await this.page
-        .getByRole('link', { name: 'Add to cart', exact: true }).click();
+        .getByRole('link', { name: 'Add to cart', exact: true })
+        .click();
     }
 }
+

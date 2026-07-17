@@ -8,11 +8,13 @@ export class LogInModal {
   }
 
   async fillUsername(username: string) {
-    await this.page.locator('#loginusername').fill(username);
+    await this.page
+      .locator('#loginusername').fill(username);
   }
 
   async fillPassword(password: string) {
-    await this.page.locator('#loginpassword').fill(password);
+    await this.page
+      .locator('#loginpassword').fill(password);
   }
 
   async clickLogIn() {
